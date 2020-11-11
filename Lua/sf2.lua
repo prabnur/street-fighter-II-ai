@@ -21,7 +21,7 @@
 local function update_memory_values(memory_values)
     memory_values["p1_hp"] = memory.readbyte(0x000C2B)
     memory_values["p2_hp"] = memory.readbyte(0x000E2B)
-    memory_values["p2_air"] = memory.readbyte(0x000F12)
+    memory_values["p2_air"] = memory.readbyte(0x0000B4)
     memory_values["p2_crouch"] = memory.readbyte(0x000E3B)
     memory_values["p2_attacking"] = memory.readbyte(0x000EB3)
     memory_values["p2_attack_type"] = memory.readbyte(0x000EB8)
@@ -36,6 +36,9 @@ local function set_input(buttons)
     joypad.set(buttons, 1)
 end
 
+-- testing to make sure that socket server is connected
+comm.socketServerSend("hello world again!")
+
 memory_values = {}
 while true do
     savestate.loadslot(1)
@@ -43,7 +46,9 @@ while true do
     while memory_values["game_start"] == 1 do
         update_memory_values(memory_values)
         -- this is where i would send the data to gym
+        -- i.e, comm.socketServerSend("...")
         -- this is also where i would set the input recieved by gym
+        -- i.e, comm.socketServerRecieve or response, i forgot
         set_input({Right=true})
         emu.frameadvance()
     end
