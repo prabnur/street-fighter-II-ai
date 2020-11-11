@@ -37,7 +37,7 @@ local function set_input(buttons)
 end
 
 -- testing to make sure that socket server is connected
-comm.socketServerSend("hello world again!")
+comm.socketServerSend("Sent this string to socket server")
 
 memory_values = {}
 while true do
@@ -52,6 +52,6 @@ while true do
         set_input({Right=true})
         emu.frameadvance()
     end
-    print("hello world")
+    print("Finished a game")
     emu.frameadvance()
 end
