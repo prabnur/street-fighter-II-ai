@@ -1,1 +1,4 @@
 socket
+gym
+keras
+keras-rl
