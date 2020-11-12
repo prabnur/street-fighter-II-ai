@@ -1,4 +1,5 @@
 import gym
+import numpy as np
 from gym import spaces
 
 class CustomEnv(gym.Env):
@@ -31,7 +32,7 @@ class CustomEnv(gym.Env):
             spaces.Discrete(2), # R
         ))
 
-       self.observation_space = spaces.Tuple((
+        self.observation_space = spaces.Tuple((
            spaces.Discrete(177), # our health [0, 176]
            spaces.Discrete(177), # enemy health [0, 176]
            spaces.Discrete(3), # 1 is standing, 2 is crouch, 3 is jumping
@@ -48,6 +49,8 @@ class CustomEnv(gym.Env):
         # call keras
         # get action back
         # send to socket server
+        pass
 
     def reset(self):
         # reset environment state to initial state
+        pass
