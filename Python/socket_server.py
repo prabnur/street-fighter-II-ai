@@ -1,44 +1,33 @@
-import socket
-def sean_socket():
-    s = socket.socket()
-    print("nice socket!")
-
-    port = 8080
-    s.bind(('127.0.0.1', port))
-    s.listen(5)
-
-    while True:
-        c, addr = s.accept()
-        print("hey got connection from", addr)
-        while True:
-            # this is where you should start accepting things from socket server
-            # and do something with them
-            print(c.recv(1024))
-
 # Following code is courtesy of Adam Fletcher and Jonathan Mortensen
 import json
 import socketserver
 
-server_address = '127.0.0.1'
-port = 8080
+def get_address_port(direction):
+    """
+    direction<str>: One of emuToGym or gymToEmu
+    returns: Tuple (ip<str>, port<int>)
+    """
+    with open('addresses.json') as f:
+        adds = json.load(f)
+        return (adds['ip'], adds[f'{direction}Port'])
 
 class EmuTCPHandler(socketserver.BaseRequestHandler):
     def handle(self):
         while True:
             # self.request is the TCP socket connected to the client
             # receive bytes of size 1024
-            msg = str(self.request.recv(1024).decode('utf-8'))
-            parsed = json.loads(msg)
-            print(parsed) # debug output
+            msg_from_lua = str(self.request.recv(1024).decode('utf-8'))
+            from_lua = json.loads(msg_from_lua)
+            print(from_lua) # debug output
             # deal with parsed json here
             command = {}
             command['message'] = "test"
             command['type'] = "processing" # temp
             # this resets once the round timer reduces to a certain amount, this flag
             # obviously needs to be changed
-            if parsed['time'] <= 130:
+            if from_lua['time'] <= 130:
                 command['type'] = "reset" # temp
-            self.request.sendall(json.dumps(command).encode('utf-8'))
+            self.request.sendall(json.dumps(command).encode('utf-8')) # To Emulator
 
             # command = {}
             # # If the emulator isn't started, load a save state
