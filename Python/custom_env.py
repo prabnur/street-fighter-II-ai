@@ -39,14 +39,14 @@ class CustomEnv(gym.Env):
 
     def reward(self):
         # reward is ((our health - enemy health) / max health)
-        reward = (self.observation_space["self_health"] - self.observation_space["opp_health"]) / self.max_health
+        self.reward = (self.observation_space["self_health"] - self.observation_space["opp_health"]) / self.max_health
 
     def step(self, action):
-        done = False 
+        done = False
         if self.observation_space["game_finished"] == 0:
             done = True 
         
-        return observation_space, reward(self), done
+        return self.observation_space, self.reward(), done
 
     def reset(self):
         # reset observation to initial state
@@ -63,4 +63,4 @@ class CustomEnv(gym.Env):
             "game_finished":spaces.Discrete(2),
         })
 
-        return observation_space
+        return self.observation_space
