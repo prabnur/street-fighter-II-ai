@@ -2,8 +2,14 @@
 import json
 import socketserver
 
-server_address = '127.0.0.1'
-port = 8080
+def get_address_port(direction):
+    """
+    direction<str>: One of emuToGym or gymToEmu
+    returns: Tuple (ip<str>, port<int>)
+    """
+    with open('addresses.json') as f:
+        adds = json.load(f)
+        return (adds['ip'], adds[f'{direction}Port'])
 
 class EmuTCPHandler(socketserver.BaseRequestHandler):
     def handle(self):
