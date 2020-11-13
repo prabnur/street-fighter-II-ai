@@ -1,4 +1,5 @@
 import gym
+import numpy as np
 from gym import spaces
 
 class CustomEnv(gym.Env):
