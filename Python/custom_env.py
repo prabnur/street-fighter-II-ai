@@ -5,9 +5,10 @@ class CustomEnv(gym.Env):
 
     metadata = {'render.modes': []}
 
-    # reward is ((our health - enemy health) / max health)
     reward_range = (0, 1)
+    reward = 0
     spec = None
+    max_health = 176
 
     action_space = None
     observation_space = None
@@ -18,36 +19,48 @@ class CustomEnv(gym.Env):
 
         # action space is whether or not the button is pressed
         # it's binary so there are 2 possible values (true or false)
-        self.action_space = spaces.Tuple((
-            spaces.Discrete(2), # UP
-            spaces.Discrete(2), # DOWN
-            spaces.Discrete(2), # LEFT
-            spaces.Discrete(2), # RIGHT
-            spaces.Discrete(2), # Y
-            spaces.Discrete(2), # X
-            spaces.Discrete(2), # L
-            spaces.Discrete(2), # B
-            spaces.Discrete(2), # A
-            spaces.Discrete(2), # R
-        ))
+        self.action_space = spaces.MultiDiscrete([
+            [0, 4], # None, Up, Right, Down, Left
+            [0, 6], # None, A, B, X, Y, L, R
+        ])
 
-       self.observation_space = spaces.Tuple((
-           spaces.Discrete(177), # our health [0, 176]
-           spaces.Discrete(177), # enemy health [0, 176]
-           spaces.Discrete(3), # 1 is standing, 2 is crouch, 3 is jumping
-           spaces.Discrete(2), # 0 is not attacking, 1 is attacking
-           spaces.Discrete(4), # 0 is punch, 2 is kick (from the lua) - not sure about not attacking and grab
-           spaces.Discrete(2), # whether or not there's a projectile
-           spaces.Discrete(385), # distance between two players in pixels [0, 385] (need to confirm)
-           spaces.Box(np.array([0,99])) # time remaining in the round
-        ))
+        self.observation_space = spaces.Dict({
+            "self_health":spaces.Box(0, self.max_health, (1,)), 
+            "opp_health":spaces.Box(0, self.max_health, (1,)),
+            "opp_attacking":spaces.Discrete(2),
+            "opp_attack_type":spaces.Discrete(4), # punch, kick, grab, no attack
+            "opp_stance":spaces.Discrete(3), # standing, crouching, jumping
+            "opp_projectile":spaces.Discrete(2),
+            "distance":spaces.Box(0, 385, (1,)), # the game is 385 pixels wide but not sure if this is correct
+            "timer":spaces.Box(0, 152, (1,)), # not sure why its 152 when the timer is 99 seconds
+        })
+
+    def reward(self):
+        # reward is ((our health - enemy health) / max health)
+        reward = (self.observation_space["self_health"] - self.observation_space["opp_health"]) / self.max_health
 
     def step(self, action):
-        # execute one time step within environment
-        
-        # call keras
-        # get action back
-        # send to socket server
+        done = False 
+        """ not sure how to check the value from spaces.Box
+        if(self.observation_space["self_health"] == 0 || 
+           self.observation_space["opp_health"] == 0 ||
+           self.observation_space["timer"] == 0):
+            done = True
+        """
+        return observation_space, reward(self), done
 
     def reset(self):
-        # reset environment state to initial state
+        # reset observation to initial state
+        # is this how to reset it?
+        self.observation_space = spaces.Dict({
+            "self_health":spaces.Box(0, self.max_health, (1,)), 
+            "opp_health":spaces.Box(0, self.max_health, (1,)),
+            "opp_attacking":spaces.Discrete(2),
+            "opp_attack_type":spaces.Discrete(4), # punch, kick, grab, no attack
+            "opp_stance":spaces.Discrete(3), # standing, crouching, jumping
+            "opp_projectile":spaces.Discrete(2),
+            "distance":spaces.Box(0, 385, (1,)), # the game is 385 pixels wide but not sure if this is correct
+            "timer":spaces.Box(0, 152, (1,)), # not sure why its 152 when the timer is 99 seconds
+        })
+
+        return observation_space
