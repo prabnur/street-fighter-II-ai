@@ -32,8 +32,9 @@ class CustomEnv(gym.Env):
             "opp_attack_type":spaces.Discrete(4), # punch, kick, grab, no attack
             "opp_stance":spaces.Discrete(3), # standing, crouching, jumping
             "opp_projectile":spaces.Discrete(2),
-            "distance":spaces.Box(0, 385, (1,)), # the game is 385 pixels wide but not sure if this is correct
-            "timer":spaces.Box(0, 152, (1,)), # not sure why its 152 when the timer is 99 seconds
+            "distance":spaces.Box(0, 187, (1,)), # [0, 187]
+            "timer":spaces.Box(0, 152, (1,)),
+            "game_finished":spaces.Discrete(2),
         })
 
     def reward(self):
@@ -42,17 +43,14 @@ class CustomEnv(gym.Env):
 
     def step(self, action):
         done = False 
-        """ not sure how to check the value from spaces.Box
-        if(self.observation_space["self_health"] == 0 || 
-           self.observation_space["opp_health"] == 0 ||
-           self.observation_space["timer"] == 0):
-            done = True
-        """
+        if self.observation_space["game_finished"] == 0:
+            done = True 
+        
         return observation_space, reward(self), done
 
     def reset(self):
         # reset observation to initial state
-        # is this how to reset it?
+
         self.observation_space = spaces.Dict({
             "self_health":spaces.Box(0, self.max_health, (1,)), 
             "opp_health":spaces.Box(0, self.max_health, (1,)),
@@ -60,8 +58,9 @@ class CustomEnv(gym.Env):
             "opp_attack_type":spaces.Discrete(4), # punch, kick, grab, no attack
             "opp_stance":spaces.Discrete(3), # standing, crouching, jumping
             "opp_projectile":spaces.Discrete(2),
-            "distance":spaces.Box(0, 385, (1,)), # the game is 385 pixels wide but not sure if this is correct
-            "timer":spaces.Box(0, 152, (1,)), # not sure why its 152 when the timer is 99 seconds
+            "distance":spaces.Box(0, 187, (1,)), # [0, 187]
+            "timer":spaces.Box(0, 152, (1,)),
+            "game_finished":spaces.Discrete(2),
         })
 
         return observation_space
