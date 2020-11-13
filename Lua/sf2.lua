@@ -8,7 +8,8 @@
 -- P2 attack type - 0x000EB8 0 is punch, 2 is kick)
 -- 0x000ED5 ?
 -- 0x000ED8 ? both also seem to relate to type of attack
--- 0x000524 fireball out or not
+-- 0x001052 fireball out or not
+-- 0x000E26 seems to indicate how long player2 is in fireball recovery
 
 -- Potential interest: whether P1 or P2 is in blockstun
 -- Distance between players - 0X000CB4
@@ -26,7 +27,7 @@ local function update_memory_values(memory_values)
     memory_values["p2_crouch"] = memory.readbyte(0x000E3B)
     memory_values["p2_attacking"] = memory.readbyte(0x000EB3)
     memory_values["p2_attack_type"] = memory.readbyte(0x000EB8)
-    memory_values["p2_fireball"] = memory.readbyte(0x000524)
+    memory_values["p2_fireball"] = memory.readbyte(0x001052)
     memory_values["distance"] = memory.readbyte(0x000CB4)
     memory_values["time"] = memory.readbyte(0x001AC8)
     memory_values["game_start"] = memory.readbyte(0x001A60)
@@ -38,7 +39,7 @@ local function set_input(buttons)
 end
 
 -- testing to make sure that socket server is connected
-comm.socketServerSend("Sent this string to socket server")
+-- comm.socketServerSend("Sent this string to socket server")
 
 memory_values = {}
 while true do
@@ -57,9 +58,6 @@ while true do
         set_input({Right=true})
         emu.frameadvance()
     end
-    comm.socketServerSend("One Game finished")
-    local response = comm.socketServerResponse()
-    print(response)
     print("Finished a game")
     emu.frameadvance()
 end

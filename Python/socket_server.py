@@ -27,9 +27,10 @@ class EmuTCPHandler(socketserver.BaseRequestHandler):
         while True:
             # self.request is the TCP socket connected to the client
             # receive bytes of size 1024
-            msg = str(self.request.recv(1024).strip())[2:-1] # [2:-1] gets rid of b''
-            # parsed = json.loads(msg.decode('utf-8'))
-            print(msg)
+            msg = str(self.request.recv(1024).decode('utf-8'))
+            parsed = json.loads(msg)
+            # print(parsed) debug output
+            # deal with parsed json here
             command = {}
             command['message'] = "test"
             self.request.sendall(json.dumps(command).encode('utf-8'))
