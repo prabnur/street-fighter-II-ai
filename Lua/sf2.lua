@@ -45,16 +45,18 @@ memory_values = {}
 while true do
     savestate.loadslot(1)
     memory_values["game_start"] = memory.readbyte(0x001A60)
-    while memory_values["game_start"] == 1 do
+    -- while memory_values["game_start"] == 1 do
+    while true do
         update_memory_values(memory_values)
         local json_encoded = json.encode(memory_values)
+        -- send values to socket server
         comm.socketServerSend(json_encoded)
-        local response = comm.socketServerResponse()
-        print(response)
-        -- this is where i would send the data to gym
-        -- i.e, comm.socketServerSend("...")
-        -- this is also where i would set the input recieved by gym
-        -- i.e, comm.socketServerRecieve or response, i forgot
+        -- recieve response from socket server
+        local response = json.decode(comm.socketServerResponse())
+        if response['type'] == 'reset' then
+            -- if server sends reset signal, break out of loop and reload
+            break
+        end
         set_input({Right=true})
         emu.frameadvance()
     end

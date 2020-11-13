@@ -29,10 +29,15 @@ class EmuTCPHandler(socketserver.BaseRequestHandler):
             # receive bytes of size 1024
             msg = str(self.request.recv(1024).decode('utf-8'))
             parsed = json.loads(msg)
-            # print(parsed) debug output
+            print(parsed) # debug output
             # deal with parsed json here
             command = {}
             command['message'] = "test"
+            command['type'] = "processing" # temp
+            # this resets once the round timer reduces to a certain amount, this flag
+            # obviously needs to be changed
+            if parsed['time'] <= 130:
+                command['type'] = "reset" # temp
             self.request.sendall(json.dumps(command).encode('utf-8'))
 
             # command = {}
