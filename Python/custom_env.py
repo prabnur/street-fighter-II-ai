@@ -21,16 +21,16 @@ class CustomEnv(gym.Env):
         # action space is whether or not the button is pressed
         # it's binary so there are 2 possible values (true or false)
         self.action_space = spaces.MultiDiscrete([
-            [0, 1], # None, Up
-            [0, 1], # None, Right
-            [0, 1], # None, Down
-            [0, 1], # None, Left
-            [0, 1], # None, A
-            [0, 1], # None, B
-            [0, 1], # None, X
-            [0, 1], # None, Y
-            [0, 1], # None, L
-            [0, 1], # None, R
+            spaces.Discrete(2), # None, Up
+            spaces.Discrete(2), # None, Right
+            spaces.Discrete(2), # None, Down
+            spaces.Discrete(2), # None, Left
+            spaces.Discrete(2), # None, A
+            spaces.Discrete(2), # None, B
+            spaces.Discrete(2), # None, X
+            spaces.Discrete(2), # None, Y
+            spaces.Discrete(2), # None, L
+            spaces.Discrete(2), # None, R
         ])
 
         self.observation_space = spaces.Dict({
