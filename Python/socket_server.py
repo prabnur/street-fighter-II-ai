@@ -1,4 +1,3 @@
-import gym
 import socket
 def sean_socket():
     s = socket.socket()
@@ -27,7 +26,7 @@ class EmuTCPHandler(socketserver.BaseRequestHandler):
         while True:
             # self.request is the TCP socket connected to the client
             # receive bytes of size 1024
-            msg = self.request.recv(1024).strip()[2:-1] # [2:-1] gets rid of b''
+            msg = str(self.request.recv(1024).strip())[2:-1] # [2:-1] gets rid of b''
             # parsed = json.loads(msg.decode('utf-8'))
             print(msg)
 
