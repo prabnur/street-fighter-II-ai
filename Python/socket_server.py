@@ -17,6 +17,7 @@ def sean_socket():
             print(c.recv(1024))
 
 # Following code is courtesy of Adam Fletcher and Jonathan Mortensen
+import json
 import socketserver
 
 server_address = '127.0.0.1'
@@ -30,6 +31,9 @@ class EmuTCPHandler(socketserver.BaseRequestHandler):
             msg = self.request.recv(1024).strip()[2:-1] # [2:-1] gets rid of b''
             # parsed = json.loads(msg.decode('utf-8'))
             print(msg)
+            command = {}
+            command['message'] = "test"
+            self.request.sendall(json.dumps(command).encode('utf-8'))
 
             # command = {}
             # # If the emulator isn't started, load a save state

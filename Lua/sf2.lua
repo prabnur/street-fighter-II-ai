@@ -17,6 +17,7 @@
 -- Game start
 -- maybe 000CCE, 001A60
 
+local json = require("dkjson")
 
 local function update_memory_values(memory_values)
     memory_values["p1_hp"] = memory.readbyte(0x000C2B)
@@ -45,6 +46,10 @@ while true do
     memory_values["game_start"] = memory.readbyte(0x001A60)
     while memory_values["game_start"] == 1 do
         update_memory_values(memory_values)
+        local json_encoded = json.encode(memory_values)
+        comm.socketServerSend(json_encoded)
+        local response = comm.socketServerResponse()
+        print(response)
         -- this is where i would send the data to gym
         -- i.e, comm.socketServerSend("...")
         -- this is also where i would set the input recieved by gym
@@ -52,6 +57,9 @@ while true do
         set_input({Right=true})
         emu.frameadvance()
     end
+    comm.socketServerSend("One Game finished")
+    local response = comm.socketServerResponse()
+    print(response)
     print("Finished a game")
     emu.frameadvance()
 end
