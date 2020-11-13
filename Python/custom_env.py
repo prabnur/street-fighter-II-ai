@@ -21,8 +21,16 @@ class CustomEnv(gym.Env):
         # action space is whether or not the button is pressed
         # it's binary so there are 2 possible values (true or false)
         self.action_space = spaces.MultiDiscrete([
-            [0, 4], # None, Up, Right, Down, Left
-            [0, 6], # None, A, B, X, Y, L, R
+            [0, 1], # None, Up
+            [0, 1], # None, Right
+            [0, 1], # None, Down
+            [0, 1], # None, Left
+            [0, 1], # None, A
+            [0, 1], # None, B
+            [0, 1], # None, X
+            [0, 1], # None, Y
+            [0, 1], # None, L
+            [0, 1], # None, R
         ])
 
         self.observation_space = spaces.Dict({
@@ -42,6 +50,7 @@ class CustomEnv(gym.Env):
         self.reward = (self.observation_space["self_health"] - self.observation_space["opp_health"]) / self.max_health
 
     def step(self, action):
+        # have to tell lua that its reset if the game is done
         done = False
         if self.observation_space["game_finished"] == 0:
             done = True 
