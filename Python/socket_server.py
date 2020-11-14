@@ -1,15 +1,7 @@
 # Following code is courtesy of Adam Fletcher and Jonathan Mortensen
 import json
 import socketserver
-
-def get_address_port(direction):
-    """
-    direction<str>: One of emuToGym or gymToEmu
-    returns: Tuple (ip<str>, port<int>)
-    """
-    with open('addresses.json') as f:
-        adds = json.load(f)
-        return (adds['ip'], adds[f'{direction}Port'])
+from server_interface import next_observation, next_action
 
 class EmuTCPHandler(socketserver.BaseRequestHandler):
     def handle(self):
@@ -52,6 +44,6 @@ class EmuTCPHandler(socketserver.BaseRequestHandler):
             #     self.request.sendall(json.dumps(command).encode('utf-8'))
 
 # ThreadingServer is asynchronous
-with socketserver.ThreadingTCPServer(get_address_port('emuToGym'), EmuTCPHandler) as server:
+with socketserver.ThreadingTCPServer(('127.0.0.1', 8080), EmuTCPHandler) as server:
     # server.handle_request() # Handle One
     server.serve_forever() # Handle requests until an explicit server.shutdown()
