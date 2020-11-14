@@ -52,6 +52,6 @@ class EmuTCPHandler(socketserver.BaseRequestHandler):
             #     self.request.sendall(json.dumps(command).encode('utf-8'))
 
 # ThreadingServer is asynchronous
-with socketserver.ThreadingTCPServer((server_address, port), EmuTCPHandler) as server:
+with socketserver.ThreadingTCPServer(get_address_port('emuToGym'), EmuTCPHandler) as server:
     # server.handle_request() # Handle One
     server.serve_forever() # Handle requests until an explicit server.shutdown()
