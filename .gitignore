@@ -1,3 +1,7 @@
 emulator\ and\ rom
 .vscode
 startup.bat
+
+# Python execution code
+*.pyc
+Python/__pycache__

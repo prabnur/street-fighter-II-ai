@@ -45,8 +45,8 @@ memory_values = {}
 while true do
     savestate.loadslot(1)
     memory_values["game_start"] = memory.readbyte(0x001A60)
-    -- while memory_values["game_start"] == 1 do
-    while true do
+    while memory_values["game_start"] == 1 do
+    -- while true do
         update_memory_values(memory_values)
         local json_encoded = json.encode(memory_values)
         -- send values to socket server
