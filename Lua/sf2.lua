@@ -45,15 +45,18 @@ memory_values = {}
 while true do
     savestate.loadslot(1)
     memory_values["game_start"] = memory.readbyte(0x001A60)
-    -- while memory_values["game_start"] == 1 do
     while true do
         update_memory_values(memory_values)
         local json_encoded = json.encode(memory_values)
         -- send values to socket server
         comm.socketServerSend(json_encoded)
         -- recieve response from socket server
-        local response = json.decode(comm.socketServerResponse())
-        if response['type'] == 'reset' then
+        local response = comm.socketServerResponse()
+        while response == nil or response == '' do -- if we don't get anything, keep asking for something
+            response = comm.socketServerResponse()
+        end
+        response = json.decode(response)
+        if response["type"] == 'reset' then
             -- if server sends reset signal, break out of loop and reload
             break
         end
