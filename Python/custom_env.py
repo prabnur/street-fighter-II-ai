@@ -48,7 +48,6 @@ class CustomEnv(gym.Env):
             "opp_projectile":spaces.Discrete(2),
             "distance":spaces.Box(0, 187, (1,)), # [0, 187]
             "timer":spaces.Box(0, 152, (1,)),
-            "game_finished":spaces.Discrete(2),
         })
 
         # TESTING
@@ -62,43 +61,43 @@ class CustomEnv(gym.Env):
         while True:
             self.step("test")
 
-    def reward(self):
-        # reward is ((our health - enemy health) / max health)
-        self.reward = (self.observation_space["self_health"] - self.observation_space["opp_health"]) / self.max_health
-
     def step(self, action):
-        # have to tell lua that its reset if the game is done
-        # done = False
-        # if self.observation_space["game_finished"] == 0:
-        #     done = True 
+        done = False 
+
         msg_from_lua = str(self.c.recv(1024).decode('utf-8'))
         from_lua = json.loads(msg_from_lua)
         print("from lua", from_lua) # debug output
+
+        if from_lua["game_start"] == 0:
+            done = True
+
         command = {}
         command['message'] = "test"
         command['type'] = "processing" # temp
-        if from_lua['time'] <= 130:
+        if done:
             command['type'] = "reset" # temp
         print("dumping", json.dumps(command).encode('utf-8'))
         self.c.sendall(json.dumps(command).encode('utf-8')) # To Emulator
         
-        # return self.observation_space, self.reward(), done
+        # reward is ((our health - enemy health) / max health)
+        self.reward = (from_lua["p1_hp"] - from_lua["p2_hp"]) / self.max_health
+
+        obs = {
+            "self_health":from_lua["p1_hp"], 
+            "opp_health":from_lua["p2_hp"],
+            "opp_attacking":from_lua["p2_attacking"],
+            "opp_attack_type":from_lua["p2_attack_type"], 
+            "opp_stance":from_lua["p2_crouch"], 
+            "opp_projectile":from_lua["p2_fireball"],
+            "distance":from_lua["distance"],
+            "timer":from_lua["time"],
+        }
+
+        return obs, self.reward, done
 
     def reset(self):
-        # reset observation to initial state
-
-        self.observation_space = spaces.Dict({
-            "self_health":spaces.Box(0, self.max_health, (1,)), 
-            "opp_health":spaces.Box(0, self.max_health, (1,)),
-            "opp_attacking":spaces.Discrete(2),
-            "opp_attack_type":spaces.Discrete(4), # punch, kick, grab, no attack
-            "opp_stance":spaces.Discrete(3), # standing, crouching, jumping
-            "opp_projectile":spaces.Discrete(2),
-            "distance":spaces.Box(0, 187, (1,)), # [0, 187]
-            "timer":spaces.Box(0, 152, (1,)),
-            "game_finished":spaces.Discrete(2),
-        })
-
-        return self.observation_space
+        # reset observation to initial state (not sure)
+        self.reward = 0
+        return None
 
 # test = CustomEnv(None, None)
