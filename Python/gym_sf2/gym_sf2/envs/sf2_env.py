@@ -4,7 +4,7 @@ import numpy as np
 import socket
 from gym import spaces
 
-class CustomEnv(gym.Env):
+class Sf2Env(gym.Env):
 
     metadata = {'render.modes': []}
 
@@ -21,8 +21,9 @@ class CustomEnv(gym.Env):
     addr = None
     
     # not sure about the arg1 or arg2, will need to change
-    def __init__(self, arg1, arg2):
-        super(CustomEnv, self).__init__()
+    # def __init__(self, arg1, arg2):
+    def __init__(self):
+        super(Sf2Env, self).__init__()
 
         # action space is whether or not the button is pressed
         # it's binary so there are 2 possible values (true or false)
@@ -59,8 +60,9 @@ class CustomEnv(gym.Env):
         self.c, self.addr = self.s.accept()
         # this is to keep the instance going, but normally keras would
         # be the one to infinitely call the step function
-        while True:
-            self.step("test")
+        print("hello!")
+        # while True:
+        #     self.step("test")
 
     def reward(self):
         # reward is ((our health - enemy health) / max health)
@@ -100,5 +102,3 @@ class CustomEnv(gym.Env):
         })
 
         return self.observation_space
-
-# test = CustomEnv(None, None)
