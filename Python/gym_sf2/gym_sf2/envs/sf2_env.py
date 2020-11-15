@@ -76,9 +76,15 @@ class Sf2Env(gym.Env):
         msg_from_lua = str(self.c.recv(1024).decode('utf-8'))
         from_lua = json.loads(msg_from_lua)
         print("from lua", from_lua) # debug output
+        print("action", action)
         command = {}
         command['message'] = "test"
         command['type'] = "processing" # temp
+        keys = ['Up', 'Right', 'Down', 'Left', 'A', 'B', 'X', 'Y', 'L', 'R']
+        key_dict = {}
+        for i in range(len(keys)):
+            key_dict[keys[i]] = str(action[i])
+        command['input'] = key_dict
         if from_lua['time'] <= 130:
             command['type'] = "reset" # temp
         print("dumping", json.dumps(command).encode('utf-8'))

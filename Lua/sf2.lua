@@ -56,11 +56,16 @@ while true do
             response = comm.socketServerResponse()
         end
         response = json.decode(response)
+        -- input_names = {'Up', 'Right', 'Down', 'Left', 'A', 'B', 'X', 'Y', 'L', 'R'}
+        input = {}
+        for key, value in pairs(response['input']) do
+            input[key] = (value == '1')
+        end
         if response["type"] == 'reset' then
             -- if server sends reset signal, break out of loop and reload
             break
         end
-        set_input({Right=true})
+        set_input(input)
         emu.frameadvance()
     end
     print("Finished a game")
