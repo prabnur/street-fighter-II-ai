@@ -24,13 +24,17 @@ local function update_memory_values(memory_values)
     memory_values["p1_hp"] = memory.readbyte(0x000C2B)
     memory_values["p2_hp"] = memory.readbyte(0x000E2B)
     memory_values["p2_air"] = memory.readbyte(0x0000B4)
-    memory_values["p2_crouch"] = memory.readbyte(0x000E3B)
+    memory_values["p2_stance"] = memory.readbyte(0x000E3B) -- 1 stand 2 crouch 3 air
     memory_values["p2_attacking"] = memory.readbyte(0x000EB3)
     memory_values["p2_attack_type"] = memory.readbyte(0x000EB8)
-    memory_values["p2_fireball"] = memory.readbyte(0x001052)
+    memory_values["p2_projectile"] = memory.readbyte(0x001052)
     memory_values["distance"] = memory.readbyte(0x000CB4)
     memory_values["time"] = memory.readbyte(0x001AC8)
     memory_values["game_start"] = memory.readbyte(0x001A60)
+    
+    memory_values["p1_x"] = memory.read_u16_be(0x000022) -- ead unsigned 2 byte value, big endian
+    memory_values["p2_x"] = memory.read_u16_be(0x000026)
+    -- memory_values["max_height"] = memory.readbyte(0x000002) -- of either character
 end
 
 

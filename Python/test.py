@@ -10,8 +10,8 @@ max_health = 176
 with gym.make('sf2-v0') as env:
 # with Sf2Env() as env:
   print('Env created')
-  while True:
-    env.step(env.action_space.sample())
+  obs = env.reset()
+  print(obs)
 
 # obs_space = gym.spaces.Dict({
 #   "self_health":gym.spaces.Box(0, max_health, (1,)), 

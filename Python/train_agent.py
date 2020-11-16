@@ -1,3 +1,4 @@
+from tensorflow.keras import Input
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Activation, Flatten
 from tensorflow.keras.optimizers import Adam
@@ -14,16 +15,17 @@ print('Making Gym')
 with gym.make('sf2-v0') as env:
     # nb_actions = env.action_space.n
     nb_actions = 10
+    nb_obs = 11
     print("Gym initialized")
 
     print("making model")
     model = Sequential()
-    model.add(Flatten(input_shape=(8,)))
-    model.add(Dense(16), activation='relu')
-    model.add(Dense(16), activation='relu')
-    model.add(Dense(16), activation='relu')
-    model.add(Dense(nb_actions))
-    model.add(Activation('linear'))
+    model.add(Dense(nb_obs, input_shape=(11)))
+    model.add(Dense(16, activation='relu'))
+    model.add(Dense(16, activation='relu'))
+    model.add(Dense(16, activation='relu'))
+    model.add(Dense(nb_actions, activation='linear'))
+    # model.build((None, 11))
     print(model.summary())
 
     agent = DQNAgent(
@@ -38,5 +40,5 @@ with gym.make('sf2-v0') as env:
     agent.fit(env, nb_steps=10000) # This function hasa bunch of options we can play with
     # See https://keras-rl.readthedocs.io/en/latest/agents/overview/#fit for all of them
     # Also returns a keras.callbacks.History that records its training
-    agent.save_weights('weights.hdf5', overwrite=True) 
+    agent.save_weights('weights.hdf5', overwrite=True)
     # we can save agents with different weights in different files and see how they do in arcade
