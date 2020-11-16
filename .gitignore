@@ -5,5 +5,7 @@ startup.bat
 # Python
 **/__pycache__
 *.pyc
-
-Python/gym_sf2/gym_sf2.egg-info
+**/*.cpython-38.pyc
+Python/gym_sf2/gym_sf2/__pycache__/__init__.cpython-38.pyc
+Python/gym_sf2/gym_sf2/envs/__pycache__/__init__.cpython-38.pyc
+Python/gym_sf2/gym_sf2/envs/__pycache__/sf2_env.cpython-38.pyc
