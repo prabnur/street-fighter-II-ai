@@ -24,7 +24,6 @@ class Sf2Env(gym.Env):
     # def __init__(self, arg1, arg2):
     def __init__(self):
         super(Sf2Env, self).__init__()
-
         # action space is whether or not the button is pressed
         # it's binary so there are 2 possible values (true or false)
         self.action_space = spaces.MultiDiscrete([
@@ -41,14 +40,14 @@ class Sf2Env(gym.Env):
         ])
 
         self.observation_space = spaces.Dict({
-            "self_health":spaces.Box(0, self.max_health, (1,)), 
-            "opp_health":spaces.Box(0, self.max_health, (1,)),
+            "self_health":spaces.Discrete(self.max_health+1), # [0, 176]
+            "opp_health":spaces.Discrete(self.max_health+1), # [0, 176]
             "opp_attacking":spaces.Discrete(2),
             "opp_attack_type":spaces.Discrete(4), # punch, kick, grab, no attack
             "opp_stance":spaces.Discrete(3), # standing, crouching, jumping
             "opp_projectile":spaces.Discrete(2),
-            "distance":spaces.Box(0, 187, (1,)), # [0, 187]
-            "timer":spaces.Box(0, 152, (1,)),
+            "distance":spaces.Discrete(188), # [0, 187]
+            "timer":spaces.Discrete(153), # [0, 152]
             "game_finished":spaces.Discrete(2),
         })
 
@@ -56,9 +55,11 @@ class Sf2Env(gym.Env):
         self.s = socket.socket()
         self.s.bind(("127.0.0.1", 8080))
         self.s.listen(5)
-
         self.c, self.addr = self.s.accept()
-        print("hello!")
+        print("Gym created and Socket Server set up")
+    
+    def close(self):
+        self.s.close()
 
     def step(self, action):
         print("step")
@@ -67,7 +68,6 @@ class Sf2Env(gym.Env):
 
         msg_from_lua = str(self.c.recv(1024).decode('utf-8'))
         from_lua = json.loads(msg_from_lua)
-        print("from lua", from_lua) # debug output
 
         if from_lua["game_start"] == 0:
             done = True
