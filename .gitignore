@@ -1,3 +1,9 @@
 emulator\ and\ rom
 .vscode
 startup.bat
+
+# Python
+**/__pycache__
+*.pyc
+
+Python/gym_sf2/gym_sf2.egg-info
