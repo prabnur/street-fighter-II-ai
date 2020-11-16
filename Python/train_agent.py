@@ -18,7 +18,7 @@ with gym.make('sf2-v0') as env:
 
     print("making model")
     model = Sequential()
-    model.add(Flatten(input_shape=(len(env.observation_space),)))
+    model.add(Flatten(input_shape=(8,)))
     model.add(Dense(16), activation='relu')
     model.add(Dense(16), activation='relu')
     model.add(Dense(16), activation='relu')
