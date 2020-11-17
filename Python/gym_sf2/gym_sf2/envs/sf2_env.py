@@ -50,8 +50,8 @@ class Sf2Env(gym.Env):
             "p2_projectile":spaces.Discrete(2),
             "distance":spaces.Discrete(188), # [0, 187]
             "time":spaces.Discrete(153), # [0, 152]
-            "p1_x":spaces.Discrete(260),
-            "p2_x":spaces.Discrete(260)
+            "p1_x":spaces.Discrete(400),
+            "p2_x":spaces.Discrete(400)
         })
 
         # TESTING
@@ -65,10 +65,12 @@ class Sf2Env(gym.Env):
         self.s.close()
 
     def parse_observation(self, from_lua):
+        obs = [
+          from_lua['p1_x'], from_lua['p2_x'], from_lua['distance'], from_lua['p2_stance'],
+          from_lua['p2_air'], from_lua['p2_attacking'], from_lua['p2_attack_type'], from_lua['p2_projectile'], 
+          from_lua['p1_hp'], from_lua['p2_hp'], from_lua['time']
+        ]
         del from_lua['game_start']
-        obs = []
-        for key in from_lua:
-            obs.append(from_lua[key])
         return obs
 
     def step(self, action):
@@ -121,5 +123,4 @@ class Sf2Env(gym.Env):
         # Get an observation
         msg_from_lua = str(self.c.recv(1024).decode('utf-8'))
         obs = self.parse_observation(json.loads(msg_from_lua))
-        print("from lua", obs) # debug output
         return obs

@@ -32,8 +32,8 @@ local function update_memory_values(memory_values)
     memory_values["time"] = memory.readbyte(0x001AC8)
     memory_values["game_start"] = memory.readbyte(0x001A60)
     
-    memory_values["p1_x"] = memory.read_u16_be(0x000022) -- ead unsigned 2 byte value, big endian
-    memory_values["p2_x"] = memory.read_u16_be(0x000026)
+    memory_values["p1_x"] = memory.read_u16_le(0x000022) -- ead unsigned 2 byte value, lil endian
+    memory_values["p2_x"] = memory.read_u16_le(0x000026)
     -- memory_values["max_height"] = memory.readbyte(0x000002) -- of either character
 end
 
