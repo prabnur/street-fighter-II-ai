@@ -20,6 +20,10 @@ class Sf2Env(gym.Env):
     c = None
     addr = None
 
+    wins = 0
+    losses = 0
+    hp_differences = []
+
     current_state = "processing"
     
     # not sure about the arg1 or arg2, will need to change
@@ -72,8 +76,8 @@ class Sf2Env(gym.Env):
         return obs
 
     def step(self, action):
-        print("step")
-        print("action", action)
+        # print("step")
+        # print("action", action)
         command = {}
         command['type'] = "processing" # temp
         keys = ['Up', 'Right', 'Down', 'Left', 'A', 'B', 'X', 'Y', 'L', 'R']
@@ -86,7 +90,7 @@ class Sf2Env(gym.Env):
             # key_dict[keys[i]] = str(action[i])
         command['input'] = key_dict
         command['type'] = self.current_state
-        print("dumping", json.dumps(command).encode('utf-8'))
+        # print("dumping", json.dumps(command).encode('utf-8'))
         self.c.sendall(json.dumps(command).encode('utf-8')) # To Emulator
 
         # Get an observation
@@ -96,14 +100,29 @@ class Sf2Env(gym.Env):
             try:
                 msg_from_lua = str(self.c.recv(1024).decode('utf-8'))
                 msg_from_lua = msg_from_lua[:msg_from_lua.index("}")+1]
-                print(msg_from_lua)
+                # print(msg_from_lua)
                 from_lua = json.loads(msg_from_lua)
-                print("from lua", from_lua) # debug output
+                # print("from lua", from_lua) # debug output
             except:
                 pass
+        
+        # to catch underflowing
+        if from_lua["p1_hp"] > 176:
+            from_lua["p1_hp"] = 0
+        if from_lua["p2_hp"] > 176:
+            from_lua["p2_hp"] = 0
 
         done = from_lua["p1_hp"] == 0 or from_lua["p2_hp"] == 0 or from_lua["time"] == 0
+        # print(from_lua["p1_hp"])
+        # print(from_lua["p2_hp"])
         if done:
+            if from_lua["p1_hp"] > from_lua["p2_hp"]:
+                # print("i won")
+                self.wins += 1
+            else:
+                # print("i lost")
+                self.losses += 1
+            self.hp_differences.append(from_lua["p1_hp"] - from_lua["p2_hp"])
             self.current_state = "reset" # temp
         else:
             self.current_state = "processing"
