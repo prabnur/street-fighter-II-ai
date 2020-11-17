@@ -10,10 +10,10 @@ import json
 
 from models import vanilla, convex, concave, less_layer, lstm
 import gym_sf2
-
+# 16 relu sigmoid vanilla is DEFAULT
 # CONFIGURE HERE
-title = "Basic_16_ReLU"
-neuron_count = 16
+title = "Basic_7_ReLU"
+neuron_count = 7
 activation = 'relu'
 final_activation = 'sigmoid'
 function = 'vanilla'
@@ -48,7 +48,7 @@ with gym.make('sf2-v0') as env:
     )
     agent.compile(Adam(lr=1e-3), metrics=['mae'])
     agent.fit(env, nb_steps=nb_steps) 
-    # agent.save_weights('weights.hdf5', overwrite=True)
+    agent.save_weights(f'Python/weights/{title}.hdf5', overwrite=True)
 
     # Get evaluation statistics
     statistics = {
@@ -63,5 +63,5 @@ with gym.make('sf2-v0') as env:
     }
 
 if statistics:
-    with open(f'stats/{title}.txt', 'w') as outfile:
+    with open(f'Python/stats/{title}.txt', 'w') as outfile:
         json.dump(statistics, outfile)
