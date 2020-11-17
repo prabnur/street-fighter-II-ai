@@ -1,0 +1,1 @@
+{"title": "Concave_12_3_12", "neuron_count": 0, "activation": "relu", "final_activation": "sigmoid", "function": "concave", "winrate": "29 %", "average_rewards": [-0.3159644308326785, -0.3239349562571217, -0.18375613620828857, 0.09135450353335559, -0.350481017561978, -0.29887607830126156, -0.42148656086597625], "hp_differences": [-114, -52, 3, 1, -93, -102, -176]}

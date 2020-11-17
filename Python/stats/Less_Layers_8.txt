@@ -1,0 +1,1 @@
+{"title": "Less_Layers_8", "neuron_count": 8, "activation": "relu", "final_activation": "sigmoid", "function": "less_layers", "winrate": "14 %", "average_rewards": [-0.46075002489295896, -0.31539029360392473, -0.38019766717122033, -0.29395849248789524, -0.23528565031027848, -0.20068473193473077, -0.12334216491056048], "hp_differences": [-139, -77, -139, 47, -27, -90, -63]}

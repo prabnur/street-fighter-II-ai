@@ -1,0 +1,1 @@
+{"title": "Basic_7_ReLU", "neuron_count": 7, "activation": "relu", "final_activation": "sigmoid", "function": "vanilla", "winrate": "17 %", "average_rewards": [-0.3723173544602128, -0.09861478768538912, -0.17344189315838857, -0.3936041098623401, 0.0905923153546399], "hp_differences": [-114, -114, -46, -132, -134, 57]}

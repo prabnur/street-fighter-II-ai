@@ -8,18 +8,17 @@ import gym
 import numpy as np
 import json
 
-from models import vanilla, convex, concave, less_layer, lstm
+from models import vanilla, convex, concave, less_layers, lstm, equalised_weight, custom_intermediary, final
 import gym_sf2
 # 16 relu sigmoid vanilla is DEFAULT
 # CONFIGURE HERE
-title = "Basic_7_ReLU"
-neuron_count = 7
+title = "Final_12_3_12_sigmoidStart"
+neuron_count = 0
 activation = 'relu'
 final_activation = 'sigmoid'
-function = 'vanilla'
+function = 'final'
 
-nb_steps = 10000
-
+nb_steps = 60000
 
 print('Making Gym')
 winrate = ''
@@ -34,7 +33,7 @@ with gym.make('sf2-v0') as env:
     print("Gym initialized")
 
     print("making model")
-    model = vanilla(neuron_count, activation, final_activation)
+    model = final()
     # model.build((None, 11))
     print(model.summary())
 
@@ -65,3 +64,4 @@ with gym.make('sf2-v0') as env:
 if statistics:
     with open(f'Python/stats/{title}.txt', 'w') as outfile:
         json.dump(statistics, outfile)
+    print(f'Winrate {round(env.wins / (env.wins + env.losses) * 100)} %')
