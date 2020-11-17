@@ -30,15 +30,15 @@ with os.scandir('Python/stats/') as entries:
     with open(entry, 'r') as datafile:
       statistics = json.load(datafile)
     if statistics: # non empty
-      rounds = list(np.arange(len(statistics['average_rewards'])) + 1) # Adds 1 to all
-      plt.clf()
+      rounds = list(np.arange(len(statistics['hp_differences'])) + 1) # Adds 1 to all
       title = statistics['title']
       plt.title(title)
-      plt.plot(rounds, statistics['average_rewards'], 'b')
+      plt.plot(rounds, statistics['hp_differences'], 'b')
       # plt.plot(rounds, hp_differences, 'r')
-      plt.ylabel('Average Reward')
+      plt.ylabel('HP Difference')
       plt.xlabel('Round')
-      plt.show()
+      # plt.show()
       plt.savefig(f'figures/{title}.png')
+      plt.clf()
       winrate = statistics['winrate']
       print(f'Winrate {winrate}')

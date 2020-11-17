@@ -13,13 +13,13 @@ from models import vanilla, convex, concave, less_layers, lstm, equalised_weight
 import gym_sf2
 # 16 relu sigmoid vanilla is DEFAULT
 # CONFIGURE HERE
-title = "Final_8"
+title = "Final_8_12_8_sigmoidStart_reluEnd"
 neuron_count = 0
-activation = 'relu'
-final_activation = 'sigmoid'
+activation = 'sigmoid'
+final_activation = 'relu'
 function = 'final'
 
-nb_steps = 60000
+nb_steps = 50000
 
 print('Making Gym')
 winrate = ''
