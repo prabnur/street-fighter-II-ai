@@ -7,12 +7,13 @@ from rl.memory import SequentialMemory
 import gym
 import numpy as np
 import json
+import matplotlib.pyplot as plt
 
 from models import vanilla, convex, concave, less_layers, lstm, equalised_weight, custom_intermediary, final
 import gym_sf2
 # 16 relu sigmoid vanilla is DEFAULT
 # CONFIGURE HERE
-title = "Final_12_3_12_sigmoidStart"
+title = "Final_8"
 neuron_count = 0
 activation = 'relu'
 final_activation = 'sigmoid'
@@ -65,3 +66,15 @@ if statistics:
     with open(f'Python/stats/{title}.txt', 'w') as outfile:
         json.dump(statistics, outfile)
     print(f'Winrate {round(env.wins / (env.wins + env.losses) * 100)} %')
+    rounds = list(np.arange(len(statistics['average_rewards'])) + 1) # Adds 1 to all
+    plt.clf()
+    title = statistics['title']
+    plt.title(title)
+    plt.plot(rounds, statistics['average_rewards'], 'b')
+    # plt.plot(rounds, hp_differences, 'r')
+    plt.ylabel('Average Reward')
+    plt.xlabel('Round')
+    plt.show()
+    plt.savefig(f'figures/{title}.png')
+    winrate = statistics['winrate']
+    print(f'Winrate {winrate}')
