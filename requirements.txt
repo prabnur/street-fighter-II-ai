@@ -4,3 +4,4 @@ h5py==2.10.0
 Keras==2.4.3
 Keras-Preprocessing==1.1.2
 keras-rl==0.4.2
+matplotlib==3.3.3

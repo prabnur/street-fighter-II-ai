@@ -9,3 +9,5 @@ startup.bat
 Python/gym_sf2/gym_sf2/__pycache__
 Python/gym_sf2/gym_sf2/envs/__pycache__
 Python/gym_sf2/gym_sf2.egg-info
+
+*.hdf5

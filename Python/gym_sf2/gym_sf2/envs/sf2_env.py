@@ -22,7 +22,10 @@ class Sf2Env(gym.Env):
 
     wins = 0
     losses = 0
+    rewards = 0
+    rewards_len = 0
     hp_differences = []
+    average_rewards = []
 
     current_state = "processing"
     
@@ -118,21 +121,27 @@ class Sf2Env(gym.Env):
         # print(from_lua["p1_hp"])
         # print(from_lua["p2_hp"])
         if done:
+            self.current_state = "reset" # temp
+
+            # Collect Statistics
             if from_lua["p1_hp"] > from_lua["p2_hp"]:
-                # print("i won")
                 self.wins += 1
             else:
-                # print("i lost")
                 self.losses += 1
             self.hp_differences.append(from_lua["p1_hp"] - from_lua["p2_hp"])
-            self.current_state = "reset" # temp
+            if self.rewards_len: # not 0
+                self.average_rewards.append(self.rewards / self.rewards_len)
+            self.rewards = 0
+            self.rewards_len = 0
         else:
             self.current_state = "processing"
+            
+            # reward is ((our health - enemy health) / max health)
+            self.reward = (from_lua["p1_hp"] - from_lua["p2_hp"]) / self.max_health
+            self.rewards += self.reward
+            self.rewards_len += 1
         # obs['opp_stance'] = int(obs['opp_stance']) - 1
         obs = self.parse_observation(from_lua)
-
-        # reward is ((our health - enemy health) / max health)
-        self.reward = (from_lua["p1_hp"] - from_lua["p2_hp"]) / self.max_health
 
         return obs, self.reward, done, {} # last thing should be info
 
@@ -140,6 +149,12 @@ class Sf2Env(gym.Env):
         # reset observation to initial state (not sure)
         self.reward = 0
         # Get an observation
-        msg_from_lua = str(self.c.recv(1024).decode('utf-8'))
-        obs = self.parse_observation(json.loads(msg_from_lua))
+        from_lua = {}
+        while from_lua == {}:
+          try :
+            msg_from_lua = str(self.c.recv(1024).decode('utf-8'))
+            from_lua = json.loads(msg_from_lua)
+          except:
+            pass
+        obs = self.parse_observation(from_lua)
         return obs
