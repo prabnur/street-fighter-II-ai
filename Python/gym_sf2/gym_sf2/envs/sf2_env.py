@@ -19,6 +19,8 @@ class Sf2Env(gym.Env):
     s = None
     c = None
     addr = None
+
+    current_state = "processing"
     
     # not sure about the arg1 or arg2, will need to change
     # def __init__(self, arg1, arg2):
@@ -71,6 +73,21 @@ class Sf2Env(gym.Env):
 
     def step(self, action):
         print("step")
+        print("action", action)
+        command = {}
+        command['type'] = "processing" # temp
+        keys = ['Up', 'Right', 'Down', 'Left', 'A', 'B', 'X', 'Y', 'L', 'R']
+        key_dict = {}
+        for i in range(len(keys)):
+            if i == action:
+                key_dict[keys[i]] = 1
+            else:
+                key_dict[keys[i]] = 0
+            # key_dict[keys[i]] = str(action[i])
+        command['input'] = key_dict
+        command['type'] = self.current_state
+        print("dumping", json.dumps(command).encode('utf-8'))
+        self.c.sendall(json.dumps(command).encode('utf-8')) # To Emulator
 
         # Get an observation
         msg_from_lua = ''
@@ -84,24 +101,12 @@ class Sf2Env(gym.Env):
                 print("from lua", from_lua) # debug output
             except:
                 pass
-        print("action", action)
-        command = {}
-        command['type'] = "processing" # temp
-        keys = ['Up', 'Right', 'Down', 'Left', 'A', 'B', 'X', 'Y', 'L', 'R']
-        key_dict = {}
-        for i in range(len(keys)):
-            if i == action:
-                key_dict[keys[i]] = 1
-            else:
-                key_dict[keys[i]] = 0
-            # key_dict[keys[i]] = str(action[i])
-        command['input'] = key_dict
-        done = from_lua["game_start"] == 0
-        if done:
-            command['type'] = "reset" # temp
-        print("dumping", json.dumps(command).encode('utf-8'))
-        self.c.sendall(json.dumps(command).encode('utf-8')) # To Emulator
 
+        done = from_lua["p1_hp"] == 0 or from_lua["p2_hp"] == 0 or from_lua["time"] == 0
+        if done:
+            self.current_state = "reset" # temp
+        else:
+            self.current_state = "processing"
         # obs['opp_stance'] = int(obs['opp_stance']) - 1
         obs = self.parse_observation(from_lua)
 

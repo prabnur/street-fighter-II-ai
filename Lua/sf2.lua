@@ -62,7 +62,6 @@ while true do
         if response ~= nil and response ~= '' then -- skip in case response is bad
             response = json.decode(response)
             -- input_names = {'Up', 'Right', 'Down', 'Left', 'A', 'B', 'X', 'Y', 'L', 'R'}
-            print(response)
             input = {}
             for key, value in pairs(response['input']) do
                 input[key] = (value == 1)
@@ -71,7 +70,6 @@ while true do
                 -- if server sends reset signal, break out of loop and reload
                 break
             end
-            print(input)
             set_input(input)
         end
         emu.frameadvance()
