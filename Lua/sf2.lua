@@ -53,23 +53,27 @@ while true do
         update_memory_values(memory_values)
         local json_encoded = json.encode(memory_values)
         -- send values to socket server
+        -- print("sending this!")
+        -- print(json_encoded)
+        -- print("and only that!")
         comm.socketServerSend(json_encoded)
-        -- recieve response from socket server
+        -- -- recieve response from socket server
         local response = comm.socketServerResponse()
-        while response == nil or response == '' do -- if we don't get anything, keep asking for something
-            response = comm.socketServerResponse()
+        if response ~= nil and response ~= '' then -- skip in case response is bad
+            response = json.decode(response)
+            -- input_names = {'Up', 'Right', 'Down', 'Left', 'A', 'B', 'X', 'Y', 'L', 'R'}
+            print(response)
+            input = {}
+            for key, value in pairs(response['input']) do
+                input[key] = (value == 1)
+            end
+            if response["type"] == 'reset' then
+                -- if server sends reset signal, break out of loop and reload
+                break
+            end
+            print(input)
+            set_input(input)
         end
-        response = json.decode(response)
-        -- input_names = {'Up', 'Right', 'Down', 'Left', 'A', 'B', 'X', 'Y', 'L', 'R'}
-        input = {}
-        for key, value in pairs(response['input']) do
-            input[key] = (value == '1')
-        end
-        if response["type"] == 'reset' then
-            -- if server sends reset signal, break out of loop and reload
-            break
-        end
-        set_input(input)
         emu.frameadvance()
     end
     print("Finished a game")

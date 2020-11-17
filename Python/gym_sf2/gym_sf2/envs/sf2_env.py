@@ -73,31 +73,42 @@ class Sf2Env(gym.Env):
         print("step")
 
         # Get an observation
-        msg_from_lua = str(self.c.recv(1024).decode('utf-8'))
-        from_lua = json.loads(msg_from_lua)
-        print("from lua", from_lua) # debug output
-
+        msg_from_lua = ''
+        from_lua = {}
+        while from_lua == {}:
+            try:
+                msg_from_lua = str(self.c.recv(1024).decode('utf-8'))
+                msg_from_lua = msg_from_lua[:msg_from_lua.index("}")+1]
+                print(msg_from_lua)
+                from_lua = json.loads(msg_from_lua)
+                print("from lua", from_lua) # debug output
+            except:
+                pass
         print("action", action)
         command = {}
         command['type'] = "processing" # temp
         keys = ['Up', 'Right', 'Down', 'Left', 'A', 'B', 'X', 'Y', 'L', 'R']
         key_dict = {}
         for i in range(len(keys)):
-            key_dict[keys[i]] = str(action[i])
+            if i == action:
+                key_dict[keys[i]] = 1
+            else:
+                key_dict[keys[i]] = 0
+            # key_dict[keys[i]] = str(action[i])
         command['input'] = key_dict
-        if from_lua['time'] <= 130:
+        done = from_lua["game_start"] == 0
+        if done:
             command['type'] = "reset" # temp
         print("dumping", json.dumps(command).encode('utf-8'))
         self.c.sendall(json.dumps(command).encode('utf-8')) # To Emulator
 
         # obs['opp_stance'] = int(obs['opp_stance']) - 1
-        done = from_lua["game_start"] == 0
         obs = self.parse_observation(from_lua)
 
         # reward is ((our health - enemy health) / max health)
         self.reward = (from_lua["p1_hp"] - from_lua["p2_hp"]) / self.max_health
 
-        return obs, self.reward, done
+        return obs, self.reward, done, {} # last thing should be info
 
     def reset(self):
         # reset observation to initial state (not sure)

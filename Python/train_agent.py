@@ -20,11 +20,13 @@ with gym.make('sf2-v0') as env:
 
     print("making model")
     model = Sequential()
-    model.add(Dense(nb_obs, input_shape=(11)))
+    # model.add(Dense(nb_obs, input_shape=(11)))
+    model.add(Flatten(input_shape=(1,11)))
+    model.add(Dense(nb_obs, input_shape=(11,)))
     model.add(Dense(16, activation='relu'))
     model.add(Dense(16, activation='relu'))
     model.add(Dense(16, activation='relu'))
-    model.add(Dense(nb_actions, activation='linear'))
+    model.add(Dense(nb_actions, input_shape=(10,), activation='sigmoid'))
     # model.build((None, 11))
     print(model.summary())
 
