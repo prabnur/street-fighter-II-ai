@@ -1,0 +1,1 @@
+{"title": "Decreasing_12_8_4", "neuron_count": 0, "activation": "relu", "final_activation": "sigmoid", "function": "custom_intermediary", "winrate": "20 %", "average_rewards": [0.32749847938988763, 0.11909828623311731, -0.38321940620440265, 0.05535319606816769, -0.2640340498258091], "hp_differences": [4, -6, -106, -17, -58]}

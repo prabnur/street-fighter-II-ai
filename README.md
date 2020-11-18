@@ -6,8 +6,10 @@ Making an AI to beat Street Fighter II's campaign using Lua, Gym and Keras-RL.
 * SF II - The World Warrior ROM
 
 ## Initial Setup
-1. Copy the Save State files from the `Save State` folder to `Bizhawk/SNES/State folder`
+1. Copy the Save State files from the `Save State` folder to `Bizhawk/SNES/State` folder
 1. `pip install -r requirements.txt`
+1. Create directory `stats` in Python
+1. Put the Bizzhawk emulator folder (`Bizhawk-2.5.2`) and rom in `emulator and rom`
 
 ## Start Up
 1. Double Click `startup.bat` if you use Windows, or run `python socket_server.py` and `Emuhawk.exe --socket_ip=127.0.0.1 --socket_port=8080`

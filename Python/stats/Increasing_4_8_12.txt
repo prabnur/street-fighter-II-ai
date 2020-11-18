@@ -1,0 +1,1 @@
+{"title": "Increasing_4_8_12", "neuron_count": 0, "activation": "relu", "final_activation": "sigmoid", "function": "custom_intermediary", "winrate": "0 %", "average_rewards": [-0.454876434245366, 0.073342620217622, -0.40698632577613647, 0.09405060289933366], "hp_differences": [-57, -28, -113, -9]}

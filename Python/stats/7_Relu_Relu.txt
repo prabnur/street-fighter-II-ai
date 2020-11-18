@@ -1,0 +1,1 @@
+{"title": "7_Relu_Relu", "neuron_count": 7, "activation": "relu", "final_activation": "relu", "function": "vanilla", "winrate": "0 %", "average_rewards": [0.0233857844218881, -0.4033189033189026, 0.03638080478117275, -0.31225191576161626], "hp_differences": [-76, -87, -57, -57, -8]}

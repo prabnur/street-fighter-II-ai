@@ -1,0 +1,1 @@
+{"title": "Convex_3_12_3", "neuron_count": 0, "activation": "relu", "final_activation": "sigmoid", "function": "convex", "winrate": "25 %", "average_rewards": [-0.04488518565056227, 0.408615044921586, 0.1576722826722719, 0.1480647788637481], "hp_differences": [-42, 85, -59, -9]}

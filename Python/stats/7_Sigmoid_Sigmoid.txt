@@ -1,0 +1,1 @@
+{"title": "7_Sigmoid_Sigmoid", "neuron_count": 7, "activation": "sigmoid", "final_activation": "sigmoid", "function": "vanilla", "winrate": "20 %", "average_rewards": [-0.33323841035654794, -0.04369980427886913, -0.4453119599032128, 0.2702216378662638, -0.12067750008812435], "hp_differences": [-145, 12, -132, -19, -106]}

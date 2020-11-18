@@ -24,13 +24,17 @@ local function update_memory_values(memory_values)
     memory_values["p1_hp"] = memory.readbyte(0x000C2B)
     memory_values["p2_hp"] = memory.readbyte(0x000E2B)
     memory_values["p2_air"] = memory.readbyte(0x0000B4)
-    memory_values["p2_crouch"] = memory.readbyte(0x000E3B)
+    memory_values["p2_stance"] = memory.readbyte(0x000E3B) -- 1 stand 2 crouch 3 air
     memory_values["p2_attacking"] = memory.readbyte(0x000EB3)
     memory_values["p2_attack_type"] = memory.readbyte(0x000EB8)
-    memory_values["p2_fireball"] = memory.readbyte(0x001052)
+    memory_values["p2_projectile"] = memory.readbyte(0x001052)
     memory_values["distance"] = memory.readbyte(0x000CB4)
     memory_values["time"] = memory.readbyte(0x001AC8)
     memory_values["game_start"] = memory.readbyte(0x001A60)
+    
+    memory_values["p1_x"] = memory.read_u16_le(0x000022) -- ead unsigned 2 byte value, lil endian
+    memory_values["p2_x"] = memory.read_u16_le(0x000026)
+    -- memory_values["max_height"] = memory.readbyte(0x000002) -- of either character
 end
 
 
@@ -45,19 +49,29 @@ memory_values = {}
 while true do
     savestate.loadslot(1)
     memory_values["game_start"] = memory.readbyte(0x001A60)
-    -- while memory_values["game_start"] == 1 do
     while true do
         update_memory_values(memory_values)
         local json_encoded = json.encode(memory_values)
         -- send values to socket server
+        -- print("sending this!")
+        -- print(json_encoded)
+        -- print("and only that!")
         comm.socketServerSend(json_encoded)
-        -- recieve response from socket server
-        local response = json.decode(comm.socketServerResponse())
-        if response['type'] == 'reset' then
-            -- if server sends reset signal, break out of loop and reload
-            break
+        -- -- recieve response from socket server
+        local response = comm.socketServerResponse()
+        if response ~= nil and response ~= '' then -- skip in case response is bad
+            response = json.decode(response)
+            -- input_names = {'Up', 'Right', 'Down', 'Left', 'A', 'B', 'X', 'Y', 'L', 'R'}
+            input = {}
+            for key, value in pairs(response['input']) do
+                input[key] = (value == 1)
+            end
+            if response["type"] == 'reset' then
+                -- if server sends reset signal, break out of loop and reload
+                break
+            end
+            set_input(input)
         end
-        set_input({Right=true})
         emu.frameadvance()
     end
     print("Finished a game")

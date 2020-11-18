@@ -1,0 +1,1 @@
+{"title": "12_Equalised", "neuron_count": 7, "activation": "relu", "final_activation": "sigmoid", "function": "equalised_weight", "winrate": "14 %", "average_rewards": [-0.1551170183982672, 0.022744258730804774, -0.3197437861763673, -0.007481506388702344, 0.042864925418942795, 0.19128704884073527], "hp_differences": [-105, -35, -124, -68, -68, 65, -48]}
